@@ -11,6 +11,18 @@ PoreMeth2 is an R package for the identification of Differentially Methylated Re
 	devtools::install_github("Lab-CoMBINE/PoreMeth2")
 
 
+To use PoreMeth2 for identifying Differentially Methylated Regions (DMRs), methylation files from both samples need to be processed using Shell script provided with this package. Follow these steps:
+1. Download the additional scripts from the "Release" section on the right sidebar. (https://github.com/Lab-CoMBINE/PoreMeth2/releases/tag/DMRs)
+2. Extract them and ensure that ModkitResorter.sh and ParseModkit.pl are executable
+
+```
+	chmod 755 ModkitResorter.sh
+	chmod 755 ParseModkit.pl
+```
+
+The script generating the entropy file requires an input file containing read-level methylation calls. These calls should be obtained using Modkit on Guppy or Dorado output data (See 1. Data Preparation, Modkit). 
+
+
 ## Features
 The functions provided by PoreMeth2 allow to:
 
@@ -19,22 +31,35 @@ The functions provided by PoreMeth2 allow to:
 - Functionally interpret DMRs by annotating them on genic and regulatory elements such as CpG Islands, Transcription Factor Binding Sites and Enhancers.
 
 ## Usage
+ 
 
-### 1. Data Preparation
-In order to use PoreMeth2 to identify DMRs, methylation files from both samples need to be elaborated by a Perl script which is also provided with this package.
-The script `parse_nanopolish_entropy.pl` takes as input read-level methylation calls  and uses them to obtain $\beta$ (methylation levels across reads) and entropy (a measure of the relative proportion of possible epialleles) values for each CpG site in both samples.
+### 1. Data Preparation 
 
-#### Input 
-The input file for the Perl script should contain read-level methylation calls obtained with Nanopolish or Modkit (on Guppy/Dorado output data) and should be structured as the output of `nanopolish call-methylation` (see [documentation](https://nanopolish.readthedocs.io/en/latest/quickstart_call_methylation.html)) and `modkit extract` (see [documentation](https://github.com/nanoporetech/modkit/blob/master/book/src/intro_extract.md)). Note that The tool used to call methylation needs to be specified to the Perl parser as option. 
+#### Modkit (Optional)
 
-> Note that DeepSignal2 methylation calls are also suitable to this tool, but since it requires using Guppy and Tombo (which are deprecated) we don't provide methods to elaborate them. If desired they can however be adapted to nanopolish format 
+If you don't have modkit outputs, you'll need to install modkit (not included in the additional scripts). You can find it at https://github.com/nanoporetech/modkit. If you already have modkit output files, you can skip this installation.
 
-#### Usage
-The Perl script is used as follows:
+To run modkit on the Dorado BAM file or any other modbam, follow the instructions in their guide or execute modkit as follows:
 
-		cat /my/methylation/calls.tsv | perl parse_nanopolish_entropy.pl > /my/parsed/reads.txt	
+```bash
+REF=hg38.fasta # your fasta reference
+THN=10
+modkit extract full --mapped-only --threads ${THN} --cpg --reference ${REF} dorado.output.bam modkit.output.tsv
+```
 
-#### Output
+#### Calculating Entropy from Methylation Calls  
+
+
+Then run ModkitResorter.sh to process methylation, hydroxymethylation profiles, or hydroxymethylation/methylation profiles:
+
+ 	sh ModkitResorter.sh modkit.output.tsv
+
+The script ModkitResorter.sh takes read-level methylation calls as input and uses them to calculate:
+
+β (methylation levels across reads)
+Entropy (a measure of the relative proportion of possible epialleles) values for each CpG site
+
+The entropy output files will be generated in the same directory as modkit.output.tsv.
 
 The output from the parser is a tab separated file that follows this structure:
 
@@ -52,7 +77,7 @@ The output from the parser is a tab separated file that follows this structure:
 #### PoreMeth2DMR
 The R function `PoreMeth2DMR` performs the double segmentation of $\beta$ and $S$ to identify DMRs and calculate $\Delta\beta$ and $\Delta S$ between test and control sample. 
 
-	   dmrs  <-  PoreMeth2DMR(TableTest, TableControl, omega = 0.1, eta = 1e-5, FW = 3)	
+	   TableDMR  <-  PoreMeth2DMR(TableTest, TableControl, omega = 0.1, eta = 1e-5, FW = 3)	
 
 Where:
 -  `TableTest` and `TableControl` are the tables output by  `parse_nanopolish_entropy.pl`  on the Test and Control samples respectively. 
@@ -91,7 +116,7 @@ The output of the function is identical to the one described for `PoreMeth2DMR`,
 #### PoreMethAnnotate
 DMRs obtained with `PoreMeth2DMR` can be annotated to genic and regulatory elements with the following command:
 	
-		PoreMethAnnotate(TableDMR, FileOut, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
+		AnnotatedTableDMR <- PoreMethAnnotate2(TableDMR, FileOut, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
 
 Where:
 - `TableDMR` is the output table of `PoreMeth2DMR`
