@@ -1,5 +1,5 @@
 # PoreMeth2
-PoreMeth2 is an R package for the identification of Differentially Methylated Regions from Nanopore methylation data (inferred by methcallers such as Nanopolish, DeepSignal, Dorado or Guppy) of paired samples and for their functional interpretation.
+PoreMeth2 is an R package for the identification of Differentially Methylated Regions from Nanopore methylation data (inferred by methcallers such as Dorado or Guppy) of paired samples and for their functional interpretation.
 
 ## Installation
 ### Install devtools from CRAN (Required)
