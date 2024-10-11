@@ -116,7 +116,7 @@ The output of the function is identical to the one described for `PoreMeth2DMR`,
 #### PoreMethAnnotate
 DMRs obtained with `PoreMeth2DMR` can be annotated to genic and regulatory elements with the following command:
 	
-		AnnotatedTableDMR <- PoreMethAnnotate2(TableDMR, FileOut, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
+		AnnotatedTableDMR <- PoreMethAnnotate2(TableDMR, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
 
 Where:
 - `TableDMR` is the output table of `PoreMeth2DMR`
