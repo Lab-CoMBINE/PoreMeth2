@@ -43,31 +43,29 @@ PoreMeth2Plot <- function(
     Input = NA, AnnotatedRes, PoreMeth2DMRResults, Meth1, Meth2, 
     CGI = TRUE, DNAse = TRUE, Enhancers = TRUE, TFBS = TRUE, CpGPositions = FALSE,
     AddRange = 'auto', CoefLM = 0.3, Assembly = "hg19", Palette = "Pal12", TxtGeneColor = "black",
-    DMRBeta = TRUE, DMREntropy = FALSE, DMRBetaPoly = FALSE, DMRPoints = TRUE, DMRLines = FALSE, FeatureLines = FALSE, FeaturePoints = FALSE, DMREntropyPoly = FALSE, EntropyPoints = TRUE,
+    DMRBeta = TRUE, DMREntropy = TRUE, DMRBetaPoly = FALSE, DMRPoints = TRUE, DMRLines = FALSE, FeatureLines = FALSE, FeaturePoints = FALSE, DMREntropyPoly = FALSE, EntropyPoints = TRUE,
     Grid = TRUE, CoordLines = TRUE, ShowCpGNames = FALSE,
-    DMRLinesW = 1, DMRLinesT = 1, PointsCex = 0.5,
-    FeatureLinesW = 1, FeatureLinesT = 2, FeatureLinesC1 = NULL, FeatureLinesC2 = NULL, FeaturePointsC = NULL, GeneNameOffset = 0
+    DMRLinesW = 1, DMRLinesT = 1,
+    PointsCex = 0.5,
+    FeatureLinesW = 1, FeatureLinesT = 2, FeatureLinesC1 = NULL, FeatureLinesC2 = NULL, FeaturePointsC = NULL
 ){
     # Generating Palettes
-    if(class(Palette) == "character"){
-        Pals <- list(
-            Pal1 = c("#153B2C","#1C5C42","#97A397","#D4D7C4","#E3BD6A","#DCC695"),
-            Pal2 = c("#264653","#2A9D8F","#E9C46A","#F4A261","#EE8959","#E76F51"),
-            Pal3 = c("#A36361","#D3A29D","#E8B298","#EECC8C","#BDD1C5","#9EABA2"),
-            Pal4 = c("#003049","#6B2C39","#D62828","#F77F00","#FCBF49","#EAE2B7"),
-            Pal5 = c("#361C0E","#570211","#7E3110","#004540","#032C4D","#360825"),
-            Pal6 = c("#264653","#2A9D8F","#E9C46A","#F4A261","#E76F51","#EC8C74"),
-            Pal7 = rev(c("#153B2C","#1C5C42","#97A397","#D4D7C4","#E3BD6A","#DCC695")),
-            Pal8 = rev(c("#264653","#2A9D8F","#E9C46A","#F4A261","#EE8959","#E76F51")),
-            Pal9 = rev(c("#A36361","#D3A29D","#E8B298","#EECC8C","#BDD1C5","#9EABA2")),
-            Pal10 = rev(c("#003049","#6B2C39","#D62828","#F77F00","#FCBF49","#EAE2B7")),
-            Pal11 = rev(c("#361C0E","#570211","#7E3110","#004540","#032C4D","#360825")),
-            Pal12 = rev(c("#264653","#2A9D8F","#E9C46A","#F4A261","#E76F51","#EC8C74"))
-        )
-        Pal <- Pals[[Palette]]
-    } else {
-        Pal <- Palette
-    }
+    Pals <- list(
+        Pal1 = c("#153B2C","#1C5C42","#97A397","#D4D7C4","#E3BD6A","#DCC695"),
+        Pal2 = c("#264653","#2A9D8F","#E9C46A","#F4A261","#EE8959","#E76F51"),
+        Pal3 = c("#A36361","#D3A29D","#E8B298","#EECC8C","#BDD1C5","#9EABA2"),
+        Pal4 = c("#003049","#6B2C39","#D62828","#F77F00","#FCBF49","#EAE2B7"),
+        Pal5 = c("#361C0E","#570211","#7E3110","#004540","#032C4D","#360825"),
+        Pal6 = c("#264653","#2A9D8F","#E9C46A","#F4A261","#E76F51","#EC8C74"),
+        Pal7 = rev(c("#153B2C","#1C5C42","#97A397","#D4D7C4","#E3BD6A","#DCC695")),
+        Pal8 = rev(c("#264653","#2A9D8F","#E9C46A","#F4A261","#EE8959","#E76F51")),
+        Pal9 = rev(c("#A36361","#D3A29D","#E8B298","#EECC8C","#BDD1C5","#9EABA2")),
+        Pal10 = rev(c("#003049","#6B2C39","#D62828","#F77F00","#FCBF49","#EAE2B7")),
+        Pal11 = rev(c("#361C0E","#570211","#7E3110","#004540","#032C4D","#360825")),
+        Pal12 = rev(c("#264653","#2A9D8F","#E9C46A","#F4A261","#E76F51","#EC8C74"))
+    )
+
+    Pal <- Pals[[Palette]]
 
     # Loading Annotation Data
     PathDBIn <- paste0(.libPaths()[1], "/PoreMeth2/data/")
@@ -113,14 +111,12 @@ PoreMeth2Plot <- function(
         if(!grepl("chr", Coord[1])) Coord[1] <- paste0("chr", Coord[1])
         IndDMRTarget <- suppressWarnings(which(AnnotatedRes[,1] == Coord[1] & as.numeric(AnnotatedRes[,2]) >= as.numeric(Coord[2]) & as.numeric(AnnotatedRes[,3]) <= as.numeric(Coord[3])))
         TargetFeatureCoord <- AnnotatedRes[IndDMRTarget, 12:14]
-        if(nrow(TargetFeatureCoord)<1) stop("No genomic features to plot, check the input coordinates")
     } else {
         CoordDF <- subset(TableGenCodeIn, TableGenCodeIn$Gene.Symbol %in% Input)
         Coord <- c(CoordDF[1,1], range(c(CoordDF[,2], CoordDF[,3])))
         if(!grepl("chr", Coord[1])) Coord[1] <- paste0("chr", Coord[1])
         IndDMRTarget <- suppressWarnings(which(AnnotatedRes[,1] == Coord[1] & as.numeric(AnnotatedRes[,13]) >= as.numeric(Coord[2]) & as.numeric(AnnotatedRes[,14]) <= as.numeric(Coord[3])))
         TargetFeatureCoord <- data.frame(rbind(Coord))
-        if(nrow(TargetFeatureCoord)<1) stop("No genomic features to plot, check the input coordinates")
     }
 
     # Extracting Info From Annotation
@@ -132,8 +128,8 @@ PoreMeth2Plot <- function(
     TargetGeneAnnotation <- split(TargetGeneAnnotation, TargetGeneAnnotation$"Gene.Symbol")[TargetGeneUnique]
     TargetBeta <- AnnotatedRes[IndDMRTarget, c(4, 6, 7)]
     TargetEntropy <- AnnotatedRes[IndDMRTarget, c(5, 8, 9)]
-    TargetChrMeth1 <- subset(Meth1, Meth1[, 1] %in% gsub("chr", "", Coord[1]))
-    TargetChrMeth2 <- subset(Meth2, Meth2[, 1] %in% gsub("chr", "", Coord[1]))
+    TargetChrMeth1 <- subset(Meth1, Meth1[, 1] %in% gsub("chr", "", Coord[1]) | Meth1[, 1] %in% Coord[1])
+    TargetChrMeth2 <- subset(Meth2, Meth2[, 1] %in% gsub("chr", "", Coord[1]) | Meth2[, 1] %in% Coord[1])
 
     # Other Info from Full Annotations
     tryCatch({
@@ -157,14 +153,13 @@ PoreMeth2Plot <- function(
             rep(any(DMRBeta, DMRBetaPoly, DMRPoints, DMRLines) +  any(FeatureLines, FeaturePoints) + 1, any(DMREntropy, DMREntropyPoly) * 2),
             rep(any(DMRBeta, DMRBetaPoly, DMRPoints, DMRLines) + any(FeatureLines, FeaturePoints) + any(DMREntropy, DMREntropyPoly) + 1, 1 * 1),
             rep(any(DMRBeta, DMRBetaPoly, DMRPoints, DMRLines) + any(FeatureLines, FeaturePoints) + any(DMREntropy, DMREntropyPoly) + 2, any(CpGPositions, CGI, DNAse, Enhancers, TFBS) * 1)
-
         ),
         ncol = 1
     )
 
     # Window Methylation / Entropy levels
     if(DMRBeta){
-        CurPoreMeth2DMRResults <- subset(PoreMeth2DMRResults, PoreMeth2DMRResults[, 1] == gsub("chr", "", Coord[1]))
+        CurPoreMeth2DMRResults <- subset(PoreMeth2DMRResults, PoreMeth2DMRResults[, 1] == gsub("chr", "", Coord[1]) | PoreMeth2DMRResults[, 1] == Coord[1])
         CurPoreMeth2DMRResults <- subset(CurPoreMeth2DMRResults, as.numeric(CurPoreMeth2DMRResults$p) <= 0.05)
         WindowBLevels <- rbind(
             subset(CurPoreMeth2DMRResults, as.numeric(CurPoreMeth2DMRResults[, 2]) >= PlotRange[1] & as.numeric(CurPoreMeth2DMRResults[, 3]) <= PlotRange[2]),
@@ -173,6 +168,7 @@ PoreMeth2Plot <- function(
         )
         WindowBLevels <- unique(WindowBLevels)
     }
+
 
     if(any(DMRPoints, DMRLines, DMRBetaPoly, CpGPositions, FeaturePoints, FeatureLines)){
         # Retrieving Info about common mCs within the DMR
@@ -327,27 +323,6 @@ PoreMeth2Plot <- function(
 
     }
 
-    if(any(FeaturePoints, FeatureLines)){
-        par(mar = c(0.7, 4.1, 0.5, 1.1))
-        plot(x = 1, y = 1, col = "white", xlim = c(PlotRange[1], PlotRange[2]), ylim = c(0, 1), ylab = expression(paste(Beta, "Levels")), xlab = "", xaxt = "n", bty = "n", main = Input, col.main = ifelse(any(DMRBeta, DMRBetaPoly, DMRPoints, DMRLines), "white", "black"))
-        if (Grid) {
-            abline(h = seq(-1, 1, 0.1), col = "grey95", lwd = 0.1)
-        }
-        if (FeaturePoints) {
-            FeaturePointsC1 <- Pal[ColInd]
-            FeaturePointsC2 <- Pal[ColInd - 1]
-            ys <- WindowCpGLevels1[, 5] - WindowCpGLevels2[, 5]
-            points(x = WindowCpGLevels2[, 2], y = ys, xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = adjustcolor(ifelse(ys < 0, FeaturePointsC1, FeaturePointsC2), alpha.f = .15), pch = 21, cex = PointsCex)
-        }
-        if (FeatureLines) {
-            FeatureLinesC1 <- Pal[ColInd]
-            FeatureLinesC2 <- Pal[ColInd - 1]
-            ys <- WindowCpGLevels1[, 5] - WindowCpGLevels2[, 5]
-            lines(x = WindowCpGLevels2[, 2], y = ys, xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = adjustcolor(ifelse(ys < 0, FeatureLinesC1, FeatureLinesC2), alpha.f = .15),  lty = FeatureLinesT, lwd = FeatureLinesW)
-        }
-    }
-
-    # Plot annotations
     ColInd <- sum(
         DMRBeta,
         (any(DMRBetaPoly, DMRPoints, DMRLines) * 2),
@@ -355,6 +330,24 @@ PoreMeth2Plot <- function(
         (any(DMREntropyPoly, FeaturePoints, FeatureLines) * 2)
     )
 
+    if(any(FeaturePoints, FeatureLines)){
+        par(mar = c(0.7, 4.1, 0.5, 1.1))
+        plot(x = 1, y = 1, col = "white", xlim = c(PlotRange[1], PlotRange[2]), ylim = c(0, 1), ylab = expression(paste(Beta, "Levels")), xlab = "", xaxt = "n", bty = "n", main = Input, col.main = ifelse(any(DMRBeta, DMRBetaPoly, DMRPoints, DMRLines), "white", "black"))
+        if (Grid) {
+            abline(h = seq(-1, 1, 0.1), col = "grey95", lwd = 0.1)
+        }
+        if (FeaturePoints) { 
+            points(x = WindowCpGLevels2[, 2], y = WindowCpGLevels2[, 5], xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = Pal[ColInd], pch = 19)
+            points(x = WindowCpGLevels1[, 2], y = WindowCpGLevels1[, 5], xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = Pal[ColInd - 1], pch = 19)
+        }
+        if (FeatureLines) {
+            lines(x = WindowCpGLevels1[, 2], y = WindowCpGLevels1[, 5], xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = Pal[ColInd], lty = FeatureLinesT, lwd = FeatureLinesW)
+            lines(x = WindowCpGLevels2[, 2], y = WindowCpGLevels2[, 5], xlim = c(PlotRange[1], PlotRange[2]), ylim = c(-.1, 1), col = Pal[ColInd - 1], lty = FeatureLinesT, lwd = FeatureLinesW)
+        }
+        ColInd <- ColInd - 2
+    }
+
+    # Plot annotations
     N <- 0
     NExtra <- seq(1, sum(CpGPositions, CGI, DNAse, Enhancers, TFBS))
     par(mar = c(0.7, 4.1, 0.9, 1.1))
@@ -386,7 +379,7 @@ PoreMeth2Plot <- function(
         N <- N + 1
         IndCurGene <- which(TargetGene == CurrentGene)
         CurGeneText <- paste0(CurrentGene, ifelse(unique(TargetStrand[IndCurGene]) == "+", " -->", " <--"))
-        text(CurGeneText, x = max(min(FeatCoordLeft), PlotRange[1]), y = (-0.09 * N) - .05, adj = GeneNameOffset, cex = 0.9, col = TxtGeneColor)
+        text(CurGeneText, x = max(min(FeatCoordLeft), PlotRange[1]), y = (-0.09 * N) - .05, adj = 0, cex = 0.9, col = TxtGeneColor)
     }
 
     # Plotting extra info
