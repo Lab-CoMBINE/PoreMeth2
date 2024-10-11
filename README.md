@@ -76,6 +76,7 @@ The output from the parser is a tab separated file that follows this structure:
 
 #### PoreMeth2DMR
 The R function `PoreMeth2DMR` performs the double segmentation of $\beta$ and $S$ to identify DMRs and calculate $\Delta\beta$ and $\Delta S$ between test and control sample. 
+We suggest to import TableTest and TableControl with fread function (from data.table package) or vroom (from Vroom package)
 
 	   TableDMR  <-  PoreMeth2DMR(TableTest, TableControl, omega = 0.1, eta = 1e-5, FW = 3)	
 
