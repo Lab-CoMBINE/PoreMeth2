@@ -19,15 +19,15 @@ PoreMeth2DMR <- function(TableTest,TableControl,omega=0.1,eta=1e-5,FW=3)
   dyn.load(paste0(PathSrc, "PoreMeth2.so"))
 
   ##### Extracting Info from Test and Control Tables ##### 
-  ChrTest<-TableTest$V1
-  PosTest<-TableTest$V2
-  EntropyTest<-TableTest$V3
-  BetaTest<-TableTest$V5
+  ChrTest<-unlist(TableTest[,1])
+  PosTest<-unlist(TableTest[,2])
+  EntropyTest<-unlist(TableTest[,3])
+  BetaTest<-unlist(TableTest[,5])
   
-  ChrControl<-TableControl$V1
-  PosControl<-TableControl$V2
-  EntropyControl<-TableControl$V3
-  BetaControl<-TableControl$V5
+  ChrControl<-unlist(TableControl[,1])
+  PosControl<-unlist(TableControl[,2])
+  EntropyControl<-unlist(TableControl[,3])
+  BetaControl<-unlist(TableControl[,5])
   
   
   ### Starting Analysis Chromosome by Chromosomes ####
