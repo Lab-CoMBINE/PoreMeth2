@@ -117,7 +117,7 @@ The output of the function is identical to the one described for `PoreMeth2DMR`,
 #### PoreMethAnnotate
 DMRs obtained with `PoreMeth2DMR` can be annotated to genic and regulatory elements with the following command:
 	
-		AnnotatedTableDMR <- PoreMethAnnotate2(TableDMR, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
+		AnnotatedTableDMR <- PoreMethAnnotate(TableDMR, NumProc = 5, AnnotationType = "Genes", Assembly = "hg19")	
 
 Where:
 - `TableDMR` is the output table of `PoreMeth2DMR`
@@ -201,7 +201,7 @@ With this function it is possible to display stats about `beta_cov` and `entropy
 This function permits to plot DMRs $\Delta \beta$ and $\Delta S$ levels with genomic and regulatory annotations.
 It can be used with:
 		
-		PoreMeth2Plot <- function(Input = NA, AnnotatedRes, PoreMeth2DMRResults, Meth1, Meth2)
+		PoreMeth2Plot(Input, AnnotatedRes, PoreMeth2DMRResults, Meth1, Meth2)
 
 Where:
 - `Input` Are the coordinates to plot (chr:start-end) or gene symbol.
