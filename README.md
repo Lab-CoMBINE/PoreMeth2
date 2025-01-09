@@ -207,8 +207,8 @@ Where:
 - `Input` Are the coordinates to plot (chr:start-end) or gene symbol.
 - `AnnotatedRes` Results from PoreMethAnnotate.
 - `PoreMeth2DMRResults` Results from PoreMeth2DMR.
-- `Meth1` Results from parse_nanopolish_entropy.
-- `Meth2` Results from parse_nanopolish_entropy.
+- `Meth1` Results from `ModkitResorter.pl`.
+- `Meth2` Results from `ModkitResorter.pl`.
 
 By default the resulting panel shows 3 plots a) the shifting levels of the DMRs, the $\Delta \beta$ of the CpGs on which the DMRs are calculated, b) the shifting levels of the Entropy, the $\Delta S$ of the CpGs on which the DMRs are calculated, c) the following genomic regions: the gene features (promoters, exons, introns and direction), the CGIs, the DNAse sites, the enhancers and the TFBS
 Other the aesthetic parameters are available for a better readibility and understanding of the plots.
