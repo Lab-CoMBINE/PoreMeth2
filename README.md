@@ -81,7 +81,7 @@ We suggest to import TableTest and TableControl with fread function (from data.t
 	   TableDMR  <-  PoreMeth2DMR(TableTest, TableControl, omega = 0.1, eta = 1e-5, FW = 3)	
 
 Where:
--  `TableTest` and `TableControl` are the tables output by  `parse_nanopolish_entropy.pl`  on the Test and Control samples respectively. 
+-  `TableTest` and `TableControl` are the tables output by  `ModkitResorter.sh`  on the Test and Control samples respectively. 
 	> Note that we strongly suggest to filter input data based on beta_cov (a threshold of 10 is appropriate for 25-30x sequencing data, while it should be lowered for experiments with less coverage).
 	
 - `omega` is an optional parameter that modulates the relative weight between the experimental and the biological variance. When omega is close to 1, the biological variance is much larger than the experimental one, while for values of omega close to 0 the experimental noise gives the leading contribution to the total variance. We suggest to use `omega` in the range 0.1-0.5.
