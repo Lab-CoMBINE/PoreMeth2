@@ -187,15 +187,15 @@ Run with:
 		PoreMeth2SingleExpQualityPlot(TableIn)
 
 Where: 
-- `TableIn` is the output from `parse_nanopolish_entropy.pl`.
+- `TableIn` is the output from `ModkitResorter.sh`.
 
 #### PoreMeth2PairedExpQualityPlot
 With this function it is possible to display stats about `beta_cov` and `entropy_cov` for common CpG dineucleotides in the Test/Control samples pair.
 
 		PoreMeth2PairedExpQualityPlot(TableTest,TableControl)
 
-- `TableTest` is the output from `parse_nanopolish_entropy.pl`.
-- `TableControl` is the output from `parse_nanopolish_entropy.pl`.
+- `TableTest` is the output from `ModkitResorter.pl`.
+- `TableControl` is the output from `ModkitResorter.pl`.
 
 #### PoreMeth2Plot
 This function permits to plot DMRs $\Delta \beta$ and $\Delta S$ levels with genomic and regulatory annotations.
