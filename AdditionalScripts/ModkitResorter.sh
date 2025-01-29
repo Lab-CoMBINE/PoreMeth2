@@ -70,6 +70,6 @@ rm "${FINAL_TMP_H}"
 
 fi
 
-sed -i '1i chrom\tentropy\tentropy_cov\tbeta\tbeta_cov' "${FINAL_H%.tsv}.entropy.file.tsv"
+sed -i '1i chrom\tpos\tentropy\tentropy_cov\tbeta\tbeta_cov' "${FINAL_H%.tsv}.entropy.file.tsv"
 
 echo "Entropy file generated. Check the input folder" 
