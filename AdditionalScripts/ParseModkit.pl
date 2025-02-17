@@ -2,7 +2,6 @@
 #############################################
 #Author: Alberto magi
 #email: albertomagi@gmail.com
-#Created Time: 08 May 2017   
 #University of Florence
 #############################################
 use strict;
@@ -11,7 +10,7 @@ use File::Basename;
 use Getopt::Long;
 use IO::File;
 
-my ($Chr,$readname,$CpGPos,$PathOut,$Label,$CpGGroupCount,$MinReads,$beta,@CpGVec,@ChrVec,$fout1,@data,@MethSupp,$MethLike,%ReadHash,%CovHash,%MethHash,$MethStatus,$lenArr,@counter,@keyReadHash,@arrSize,$string2compare,@index);
+my ($Chr,$readname,$CpGPos,$PathOut,$Label,$MinReads,$beta,@CpGVec,@ChrVec,$fout1,@data,@MethSupp,$MethLike,$HydroLike,%ReadHash,%CovHash,%MethHash,$MethStatus,$lenArr,@counter,@keyReadHash,@arrSize,$string2compare,@index);
 #$SamIn = $ARGV[0];
 
 my @stringRef=('000','001','011','010','100','101','111','110');
@@ -27,14 +26,17 @@ while (<STDIN>){
   if (! /^@/){
     @data = split /\t/, $_;
     $readname = $data[3];
-    $MethLike = $data[4];
+    $MethLike = $data[5];
+    $HydroLike = $data[4];
     $CpGPos = $data[1];
     $Chr = $data[0];
-    $CpGGroupCount = $data[7];
-    if ($MethLike> .75){
+    if ($MethLike < 0.85 && ($MethLike + $HydroLike) > 0.3 ){
+      $MethStatus= -1;
+    }
+    if ($MethLike > 0.85){
       $MethStatus=1;
     }
-    if ($MethLike< .75){
+    if (($MethLike + $HydroLike) < 0.3){
       $MethStatus=0;
     }
     if ($Chr ne $ChrOld){
@@ -53,24 +55,19 @@ while (<STDIN>){
         for my $keyReadHash (@keyReadHash){
           my @subkeyS = keys %{$ReadHash{$keyReadHash}};
           my $arrSize = @subkeyS;
-          #print "$arrSize\n";
           if ($arrSize==$NumCpG){
             @MethSupp=();
             foreach my $subkeyS (@subkeyS) {
               push @MethSupp, @{$ReadHash{$keyReadHash}{$subkeyS}};
-              #print "$ReadHash{$keyReadHash}{$subkeyS}\n";
             }
             $string2compare = join("", @MethSupp);
-            #print "$string2compare\n";
             @index = grep { $stringRef[$_] eq $string2compare } 0..$#stringRef;
             my $ind_size = @index;
             if ($ind_size!=0)
             {
-              #print "@stringRef\n";
               $counter[$index[0]] += 1;
             }
           }
-          #print "@CpGVec\n";
           delete($ReadHash{$keyReadHash}{$CpGVec[0]});
           @subkeyS = keys %{$ReadHash{$keyReadHash}};
           $arrSize = @subkeyS;
@@ -111,14 +108,13 @@ while (<STDIN>){
       push @ChrVec, $Chr;
       push @CpGVec, $CpGPos;
       $lcount += 1;
-      #print "$lcount\n";
     }
     @{$ReadHash{$readname}{$CpGPos}}=$MethStatus;
-    $MethHash{$CpGPos} += $MethStatus;
-    $CovHash{$CpGPos} += 1;
+    if ($MethLike>0.85 || ($MethLike + $HydroLike)<0.3 ) {
+      $MethHash{$CpGPos} += $MethStatus;
+      $CovHash{$CpGPos} += 1;
+    }
     $CpGPosOld=$CpGPos;
     $ChrOld=$Chr;  
     }
 }
-
-
