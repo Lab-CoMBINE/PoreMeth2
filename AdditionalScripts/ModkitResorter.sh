@@ -46,8 +46,6 @@ elif [ $MCOUNTER -gt 1 ] && [ $HCOUNTER -eq 0 ]; then
 
 fi
 
-echo "done1"
-
 
 # Sorting and merging
 
@@ -66,7 +64,6 @@ else
 fi
 
 rm $RESHAPE
-echo "done2"
 
 # bgzipping and indexing
 if [ -e $FINAL_TMP ]; then 
