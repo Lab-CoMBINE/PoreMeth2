@@ -26,7 +26,7 @@ MCOUNTER=$(echo "$char" | grep -c "m")
 HCOUNTER=$(echo "$char" | grep -c "h")
 
 if [ $MCOUNTER -gt 1 ] && [ $HCOUNTER -gt 1 ]; then
-  awk ' NR % 2 == 1 {
+  tail -n +2 $MODKIT  | awk ' NR % 2 == 1 {
       key = $1;
       chr = $4;
       start = $3;
@@ -39,7 +39,7 @@ if [ $MCOUNTER -gt 1 ] && [ $HCOUNTER -gt 1 ]; then
       } else {
           print chr, start-1, start, key, hydro, methy;
       }
-  } ' OFS="\t" $MODKIT > $RESHAPE
+  } ' OFS="\t" > $RESHAPE
 
 elif [ $MCOUNTER -gt 1 ] && [ $HCOUNTER -eq 0 ]; then
   awk '{if ($12 == "m") {print}}' $MODKIT | awk -v OFS="\t" '{if ($6 == "+") {print $4,$3,$3+1,$1,0,$11} else {print $4,$3-1,$3,$1,0,$11}}' > $RESHAPE
