@@ -12,8 +12,8 @@ PoreMeth2 is an R package for the identification of Differentially Methylated Re
 
 
 To use PoreMeth2 for identifying Differentially Methylated Regions (DMRs), methylation files from both samples need to be processed using Shell script provided with this package. Follow these steps:
-1. Download the additional scripts from the "Release" section on the right sidebar. (https://github.com/Lab-CoMBINE/PoreMeth2/releases/tag/DMRs)
-2. Extract them and ensure that ModkitResorter.sh and ParseModkit.pl are executable
+1. Download or copy the additional scripts from the "AdditionalScripts" folder.
+2. Ensure that ModkitResorter.sh and ParseModkit.pl are executable
 
 ```
 	chmod 755 ModkitResorter.sh
