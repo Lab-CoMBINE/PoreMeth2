@@ -11,7 +11,7 @@
 #'
 #' @export
 
-PoreMethAnnotate2 <- function(TableMethIn,FileOut,NumProc=5,AnnotationType="Genes",Assembly="hg19")
+PoreMethAnnotate <- function(TableMethIn,FileOut,NumProc=5,AnnotationType="Genes",Assembly="hg19")
 {
   Out <- list()
   PathDBIn <- paste0(.libPaths()[1], "/PoreMeth2/data/")
