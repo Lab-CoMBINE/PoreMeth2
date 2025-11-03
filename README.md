@@ -35,9 +35,9 @@ The functions provided by PoreMeth2 allow to:
 
 ### 1. Data Preparation 
 
-#### Modkit (Optional)
+#### Modkit
 
-If you don't have modkit outputs, you'll need to install modkit (not included in the additional scripts). You can find it at https://github.com/nanoporetech/modkit. If you already have modkit output files, you can skip this installation.
+If you don't have modkit, you'll need to install modkit (not included in the additional scripts). You can find it at https://github.com/nanoporetech/modkit. If you already have modkit output files, you can skip this installation.
 
 To run modkit on the Dorado BAM file or any other modbam, follow the instructions in their guide or execute modkit as follows:
 
@@ -54,7 +54,7 @@ Then run ModkitResorter.sh to process methylation, hydroxymethylation profiles, 
 
  	sh ModkitResorter.sh modkit.output.tsv
 
-The script ModkitResorter.sh takes read-level methylation calls as input and uses them to calculate:
+The script ModkitResorter.sh takes read-level methylation calls as input and calculates:
 
 β (methylation levels across reads)
 Entropy (a measure of the relative proportion of possible epialleles) values for each CpG site
